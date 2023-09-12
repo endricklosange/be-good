@@ -6,7 +6,7 @@ services:
     ports:
       - "80:3000"
     volumes:
-      - ./src:/var/www/html
+      - ./client:/var/www/html
   pma:
     image: phpmyadmin
     ports:
