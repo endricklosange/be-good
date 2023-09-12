@@ -1,8 +1,10 @@
 services:
-  api:
-    image: php:7.2-apache
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "80:3000"
     volumes:
       - ./src:/var/www/html
   pma:
