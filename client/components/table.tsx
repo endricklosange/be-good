@@ -1,4 +1,17 @@
-export default function Table() {
+interface TableProps {
+    data: any[]
+}
+
+export default function Table(data: TableProps) {
+
+    const count = (row: string) => {
+        return row.split(',').length
+    }
+
+    const formatDate = (date: Date) => {
+        return new Date(date).toLocaleDateString('fr-FR')
+    }
+
     return (
         <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
             <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -27,20 +40,22 @@ export default function Table() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="grid grid-cols-4">
-                            <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                                (string) Toto    
-                            </th>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                                (int) 103    
-                            </td>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                                (datetime) 11/12/2023 13h50    
-                            </td>
-                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                                (datetime) 11/12/2023 14h50    
-                            </td>
-                        </tr>
+                        {data.data.map((event: any) => (
+                            <tr className="grid grid-cols-4" key={event.id}>
+                                <th className="capitalize border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                                    {event.title}
+                                </th>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                                    {count(event.participant)}
+                                </td>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                                    {formatDate(event.start_at)}
+                                </td>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                                    {formatDate(event.end_at)}
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

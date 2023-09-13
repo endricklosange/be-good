@@ -1,16 +1,16 @@
 import Table from '../components/table'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 
 export default function Home() {
 
+  let [data, setData] = useState<any[]>([])
+
   useEffect(() => {
-    // get /api/events
     fetch('/api/events')
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => setData(data))
   }, [])
-  
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24">
@@ -25,7 +25,7 @@ export default function Home() {
             Export
           </button> 
         </div>
-        <Table />
+        <Table data={data} />
       </div>
     </main>
   )
