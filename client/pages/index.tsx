@@ -1,7 +1,17 @@
-import Image from 'next/image'
-import Table from './table'
+import Table from '../components/table'
+import { useEffect } from 'react'
+
 
 export default function Home() {
+
+  useEffect(() => {
+    // get /api/events
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(data => console.log(data))
+  }, [])
+  
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24">
       <div className='max-w-4xl w-full'>
