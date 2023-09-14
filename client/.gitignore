@@ -33,3 +33,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# public
+/public/import/*.csv
+/public/import/archive/*.csv
+/public/export/*.json
+/public/import/archive/*.json
