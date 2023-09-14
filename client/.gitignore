@@ -38,4 +38,4 @@ next-env.d.ts
 /public/import/*.csv
 /public/import/archive/*.csv
 /public/export/*.json
-/public/import/archive/*.json
+/public/export/archive/*.json
