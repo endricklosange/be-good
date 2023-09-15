@@ -21,7 +21,6 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
                 if (jsonData) {
                     allCSVData.push(jsonData);
                 }
-                // move csv file to archive
                 fs.renameSync(filePath, `${importDirectoryPath}/archive/${csvFileName}`);
             }
 
@@ -42,7 +41,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
             const csv = fileData.trim().split(';');
             let json: any = {};
 
-            const [title, organizers, participants, location, start_at, end_at, start_time, end_time, description] = csv;
+            const [title, participants, location, start_at, end_at, start_time, end_time, description] = csv;
 
             json.subject = title;
             json.body = {
@@ -72,16 +71,6 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
                     },
                     type: 'optional'
                 })
-            });
-
-            json.organizer = [];
-            organizers.split(',').forEach(organizer => {
-                json.organizer.push({
-                    emailAddress: {
-                        address: organizer
-                    },
-                    type: 'required'
-                });
             });
 
             return json;

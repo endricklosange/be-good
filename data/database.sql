@@ -9,7 +9,6 @@ CREATE TABLE `events` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `title` varchar(50) NOT NULL,
-  `organization` text NOT NULL,
   `participant` text NOT NULL,
   `location` varchar(50) DEFAULT NULL,
   `start_at` datetime NOT NULL,
