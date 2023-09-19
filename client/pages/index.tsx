@@ -1,5 +1,5 @@
 import Table from '../components/table'
-import { useEffect, useRef, useLayoutEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 
 interface User {
@@ -15,15 +15,12 @@ const Home: NextPage = () => {
 
   const handleOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (!inputFileRef.current?.files?.length) {
-      alert('Please, select file you want to upload');
-      return;
-    }
-
     setIsLoading(true);
-    const formData = new FormData();
-    Object.values(inputFileRef.current.files).forEach(file => { formData.append('file', file) })
-    await fetch('/api/import', { method: 'POST', body: formData });
+    if (inputFileRef.current?.files?.length) {
+      const formData = new FormData();
+      Object.values(inputFileRef.current.files).forEach(file => { formData.append('file', file) })
+      await fetch('/api/import', { method: 'POST', body: formData });
+      }
     await fetch('/api/convert');
     await fetch('/api/upload');
     setIsLoading(false);

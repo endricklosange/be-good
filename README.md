@@ -57,7 +57,9 @@ docker-compose up
 
 ## CSV Format
 
-| Title | Description | Start Date | End Date | Attendees |
+| Title | Attendees | Location | Start Date ( yyyy-mm-dd hh:mm:ss ) | End Date ( yyyy-mm-dd hh:mm:ss ) | Start Time ( yyyy-mm-dd hh:mm:ss ) | End Time ( yyyy-mm-dd hh:mm:ss ) | Description |
+|---|---|---|---|---|---|---|---|
+| string; | string, string; | string; | string; | string; | string; | string; | string |
 
 ## Contributing
 
