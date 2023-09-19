@@ -24,7 +24,7 @@ export default function Table(data: TableProps) {
             <div className="block w-full overflow-x-auto">
                 <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
-                        <tr className="grid grid-cols-4">
+                        <tr className="grid grid-cols-5">
                             <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-gray-50 text-gray-500 border-gray-100">
                                 Evenement
                             </th>
@@ -37,11 +37,14 @@ export default function Table(data: TableProps) {
                             <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-gray-50 text-gray-500 border-gray-100">
                                 date fin
                             </th>
+                            <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-gray-50 text-gray-500 border-gray-100">
+                                actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.data.map((event: any) => (
-                            <tr className="grid grid-cols-4" key={event.id}>
+                            <tr className="grid grid-cols-5" key={event.id}>
                                 <th className="capitalize border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                                     {event.title}
                                 </th>
@@ -53,6 +56,11 @@ export default function Table(data: TableProps) {
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
                                     {formatDate(event.end_at)}
+                                </td>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                                    <a href={`/event/${event.id}`} className="text-gray-500 block uppercase underline text-xs font-bold">
+                                        Rejoindre
+                                    </a>
                                 </td>
                             </tr>
                         ))}

@@ -2,28 +2,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  function handleJSON() {
-    const exportDirectoryPath = `${process.cwd()}/public/export`;
-    const jsonFiles = fs.readdirSync(exportDirectoryPath);
-    const jsonFileNames = jsonFiles.filter((fileName) => {
-      return path.extname(fileName).toLowerCase() === ".json";
-    });
-    if (jsonFileNames.length === 0) return res.status(200).json({ error: "Aucun fichier JSON" });
-    const allJSONData = [];
-    for (const jsonFileName of jsonFileNames) {
-      const filePath = path.join(exportDirectoryPath, jsonFileName);
-      const jsonData = handleEvents(filePath);
-      if (jsonData) {
-        allJSONData.push(jsonData);
-      }
-      fs.renameSync(filePath, `${exportDirectoryPath}/archive/${jsonFileName}`);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const exportDirectoryPath = `${process.cwd()}/public/export`;
+  const jsonFiles = fs.readdirSync(exportDirectoryPath);
+  const jsonFileNames = jsonFiles.filter((fileName) => {
+    return path.extname(fileName).toLowerCase() === ".json";
+  });
+  if (jsonFileNames.length === 0) return res.status(200).json({ error: "Aucun fichier JSON" });
+  const allJSONData = [];
+  for (const jsonFileName of jsonFileNames) {
+    const filePath = path.join(exportDirectoryPath, jsonFileName);
+    const jsonData = handleEvents(filePath);
+    if (jsonData) {
+      allJSONData.push(jsonData);
     }
-    return res.status(200).json(allJSONData);
+    fs.renameSync(filePath, `${exportDirectoryPath}/archive/${jsonFileName}`);
   }
+  return res.status(200).json(allJSONData);
 
   function handleEvents(path: string) {
     const fileData = fs.readFileSync(path, "utf-8");
@@ -48,5 +43,4 @@ export default async function handler(
     });
     return JSON.parse(fileData);
   }
-  handleJSON()
 }

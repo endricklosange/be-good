@@ -2,38 +2,34 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 
-export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
-
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const importDirectoryPath = `${process.cwd()}/public/import`;
     const exportDirectoryPath = `${process.cwd()}/public/export`;
 
-
-    function readAllCSVFiles() {
-        try {
-            const csvFiles = fs.readdirSync(importDirectoryPath);
-            const csvFileNames = csvFiles.filter((fileName) => {
-                return path.extname(fileName).toLowerCase() === '.csv';
-            });
-            if (csvFileNames.length === 0) return res.status(200).json({ error: "Aucun fichier CSV" });
-            const allCSVData = [];
-            for (const csvFileName of csvFileNames) {
-                const filePath = path.join(importDirectoryPath, csvFileName);
-                const jsonData = convertCSVtoJSON(filePath);
-                if (jsonData) {
-                    allCSVData.push(jsonData);
-                }
-                fs.renameSync(filePath, `${importDirectoryPath}/archive/${csvFileName}`);
+    try {
+        const csvFiles = fs.readdirSync(importDirectoryPath);
+        const csvFileNames = csvFiles.filter((fileName) => {
+            return path.extname(fileName).toLowerCase() === '.csv';
+        });
+        if (csvFileNames.length === 0) return res.status(200).json({ error: "Aucun fichier CSV" });
+        const allCSVData = [];
+        for (const csvFileName of csvFileNames) {
+            const filePath = path.join(importDirectoryPath, csvFileName);
+            const jsonData = convertCSVtoJSON(filePath);
+            if (jsonData) {
+                allCSVData.push(jsonData);
             }
-
-            if(allCSVData.length !== 0) {
-                let timestamp = Date.now();
-                fs.writeFileSync(`${exportDirectoryPath}/export_${timestamp}.json`, JSON.stringify(allCSVData, null, 2));
-            }
-
-            return allCSVData;
-        } catch (error) {
-            return res.status(200).json(error);
+            fs.renameSync(filePath, `${importDirectoryPath}/archive/${csvFileName}`);
         }
+
+        if (allCSVData.length !== 0) {
+            let timestamp = Date.now();
+            fs.writeFileSync(`${exportDirectoryPath}/export_${timestamp}.json`, JSON.stringify(allCSVData, null, 2));
+        }
+
+        return res.status(200).json(allCSVData);
+    } catch (error) {
+        return res.status(200).json(error);
     }
 
     function convertCSVtoJSON(filePath: string) {
@@ -49,7 +45,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
                 contentType: 'HTML',
                 content: description
             }
-            
+
             json.start = {
                 timezone: 'Europe/Paris',
                 dateTime: convertDateFormat(start_at, start_time)
@@ -58,12 +54,12 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
                 timezone: 'Europe/Paris',
                 dateTime: convertDateFormat(end_at, end_time)
             }
-            if(location){
+            if (location) {
                 json.location = {
                     displayName: location,
                 }
             }
-            
+
             json.attendees = [];
             participants.split(',').forEach(participant => {
                 json.attendees.push({
@@ -88,26 +84,24 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
         let minute: number = 0;
 
         // time hh:mm
-        if(time.split(':').length === 2) {
+        if (time.split(':').length === 2) {
             [hour, minute] = time.split(':').map(Number);
         }
 
         // time yyyy-mm-dd hh:mm:ss
-        if(time.split('-').length === 3 && time.split(':').length === 3) {
+        if (time.split('-').length === 3 && time.split(':').length === 3) {
             [hour, minute] = time.split(' ')[1].split(':').map(Number);
         }
 
-         // date dd/mm/yyyy
-         if(date.split('/').length === 3) {
+        // date dd/mm/yyyy
+        if (date.split('/').length === 3) {
             [day, month, year] = date.split('/').map(Number);
         }
 
         // date yyyy-mm-dd hh:mm:ss
-        if(date.split('-').length === 3 && date.split(':').length === 3) {
+        if (date.split('-').length === 3 && date.split(':').length === 3) {
             [year, month, day] = date.split(' ')[0].split('-').map(Number);
         }
         return new Date(year, month - 1, day, hour, minute);
     }
-
-    res.status(200).json(readAllCSVFiles());
 }
