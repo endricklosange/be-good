@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json(e);
     });
 
+    let logs = [];
     if (files?.length) {
         const targetPath = path.join(process.cwd(), `/public/import/`);
         try {
@@ -36,9 +37,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         for (const file of files) {
             const tempPath = file[1].filepath;
             let timestamp = Date.now();
-
-            await fs.copyFile(tempPath, targetPath + "import_" + timestamp + ".csv");
+            const ext = file[1].mimetype;
+            if(ext === "text/csv") {
+                await fs.copyFile(tempPath, targetPath + "import_" + timestamp + ".csv");
+                logs.push({"file": file[1].originalFilename, "status": "success"});
+            } else {
+                logs.push({"file": file[1].originalFilename, "status": "error", "message": "Le fichier n'est pas au format CSV"})
+            }
         }
     }
-    return res.status(200).json(files);
+    return res.status(200).json(logs);
 }

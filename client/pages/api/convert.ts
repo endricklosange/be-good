@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
+import { query } from '../../lib/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const importDirectoryPath = `${process.cwd()}/public/import`;
@@ -32,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json(error);
     }
 
-    function convertCSVtoJSON(filePath: string) {
+    async function convertCSVtoJSON(filePath: string) {
         try {
             const fileData = fs.readFileSync(filePath, 'utf-8');
             const csv = fileData.trim().split(';');
@@ -69,6 +70,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     type: 'optional'
                 })
             });
+
+            await query('INSERT INTO events (title, participant, location, start_at, end_at, start_time, end_time, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [title, participants, location, new Date(start_at), new Date(end_at), new Date(start_time), new Date(end_time), description]);
 
             return json;
         } catch (error) {
